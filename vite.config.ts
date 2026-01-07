@@ -18,15 +18,31 @@ export default defineConfig(({ mode }) => ({
       ssr: true,
       prerender: {
         routes: async () => [
-          '/',
+          // Homepage - highest priority
+          {
+            route: '/',
+            sitemap: {
+              changefreq: 'daily',
+              priority: '1.0',
+            },
+          },
+          // About page
           {
             route: '/about-us',
             sitemap: {
-              lastmod: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
               changefreq: 'monthly',
               priority: '0.8',
             },
           },
+          // Demo/example pages
+          '/ssr',
+          '/ssr-api',
+          '/csr',
+          '/csr-demo',
+          '/isr',
+          '/ssg',
+          '/cache-purge',
+          '/cache-revalidate',
         ],
         sitemap: {
           host: 'https://analogjs-tryout.devcontentstackapps.com',
@@ -65,6 +81,13 @@ export default defineConfig(({ mode }) => ({
       },
       nitro: {
         routeRules: {
+          // Sitemap - serve as static XML file
+          '/sitemap.xml': {
+            ssr: false,
+            headers: {
+              'Content-Type': 'application/xml',
+            },
+          },
           // SSR route should be server-rendered on each request (not prerendered)
           '/ssr': {
             ssr: true,
