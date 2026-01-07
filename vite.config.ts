@@ -3,6 +3,7 @@
 import { defineConfig } from 'vite';
 import analog from '@analogjs/platform';
 import tailwindcss from '@tailwindcss/vite';
+import { PrerenderRoute } from 'nitropack';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -17,6 +18,21 @@ export default defineConfig(({ mode }) => ({
       ssr: true,
       prerender: {
         routes: ['/', '/about-us'],
+        postRenderingHooks: [
+          async (route: PrerenderRoute) => {
+            // Log route information during prerendering
+            console.log(`Prerendering route: ${route.route}`);
+            console.log(`File name: ${route.fileName}`);
+            
+            // Example: Add a custom script or modify content
+            // You can modify route.contents to add scripts, styles, or other HTML modifications
+            if (route.contents) {
+              // Example: Add a comment to identify prerendered pages
+              const prerenderComment = `<!-- Prerendered at build time: ${new Date().toISOString()} -->\n`;
+              route.contents = prerenderComment + route.contents;
+            }
+          },
+        ],
       },
       nitro: {
         routeRules: {
