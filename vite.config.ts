@@ -17,7 +17,20 @@ export default defineConfig(({ mode }) => ({
     analog({
       ssr: true,
       prerender: {
-        routes: ['/', '/about-us'],
+        routes: async () => [
+          '/',
+          {
+            route: '/about-us',
+            sitemap: {
+              lastmod: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+              changefreq: 'monthly',
+              priority: '0.8',
+            },
+          },
+        ],
+        sitemap: {
+          host: 'https://analogjs-tryout.devcontentstackapps.com',
+        },
         postRenderingHooks: [
           async (route: PrerenderRoute) => {
             // Log route information during prerendering
