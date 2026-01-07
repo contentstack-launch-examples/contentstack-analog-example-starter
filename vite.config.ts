@@ -21,15 +21,31 @@ export default defineConfig(({ mode }) => ({
         postRenderingHooks: [
           async (route: PrerenderRoute) => {
             // Log route information during prerendering
-            console.log(`Prerendering route: ${route.route}`);
-            console.log(`File name: ${route.fileName}`);
+            console.log(`[Post-Rendering Hook] Processing route: ${route.route}`);
+            console.log(`[Post-Rendering Hook] File name: ${route.fileName}`);
             
-            // Example: Add a custom script or modify content
-            // You can modify route.contents to add scripts, styles, or other HTML modifications
+            // Modify content to add visible markers for testing
             if (route.contents) {
-              // Example: Add a comment to identify prerendered pages
-              const prerenderComment = `<!-- Prerendered at build time: ${new Date().toISOString()} -->\n`;
-              route.contents = prerenderComment + route.contents;
+              const buildTime = new Date().toISOString();
+              // Add a visible HTML comment at the top for easy verification
+              const prerenderMarker = `<!-- 
+  ✅ POST-RENDERING HOOK EXECUTED
+  Route: ${route.route}
+  File: ${route.fileName}
+  Build Time: ${buildTime}
+  This comment confirms the post-rendering hook ran successfully!
+-->\n`;
+              route.contents = prerenderMarker + route.contents;
+              
+              // Optional: Add a data attribute to body for programmatic testing
+              if (route.contents.includes('<body')) {
+                route.contents = route.contents.replace(
+                  /<body([^>]*)>/,
+                  `<body$1 data-prerendered="true" data-prerender-time="${buildTime}">`
+                );
+              }
+              
+              console.log(`[Post-Rendering Hook] ✅ Successfully processed: ${route.route}`);
             }
           },
         ],
