@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+@import 'prismjs/themes/prism.css';
+@import 'prismjs/plugins/diff-highlight/prism-diff-highlight.css';
 
 /* You can add global styles to this file, and also import other style files */
 html,
