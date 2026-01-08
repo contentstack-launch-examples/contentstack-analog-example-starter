@@ -27,7 +27,16 @@ type ProductWithRandom = Product & {
         This page fetches a <strong>random product</strong> from an API on each server render.
       </p>
 
-      <div *ngIf="product" class="product-card">
+      <div *ngIf="isLoading" class="loading-message">
+        <p>Loading product...</p>
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        <p>⚠️ {{ error }}</p>
+        <button (click)="fetchProduct()" class="retry-button">Retry</button>
+      </div>
+
+      <div *ngIf="product && !isLoading && !error" class="product-card">
         <div class="image-wrapper">
           <img 
             [src]="product.image" 
@@ -119,11 +128,42 @@ type ProductWithRandom = Product & {
       .back-link a:hover {
         text-decoration: underline;
       }
+
+      .loading-message,
+      .error-message {
+        padding: 2rem;
+        margin: 2rem auto;
+        max-width: 500px;
+        border-radius: 8px;
+        background: #f3f4f6;
+      }
+
+      .error-message {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .retry-button {
+        margin-top: 1rem;
+        padding: 0.5rem 1.5rem;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .retry-button:hover {
+        background: #1d4ed8;
+      }
     `,
   ],
 })
 export default class SSRApiPage implements OnInit {
   product: ProductWithRandom | null = null;
+  error: string | null = null;
+  isLoading = true;
   private http = inject(HttpClient);
 
   async ngOnInit() {
@@ -131,6 +171,9 @@ export default class SSRApiPage implements OnInit {
   }
 
   async fetchProduct() {
+    this.isLoading = true;
+    this.error = null;
+    
     try {
       const data = await firstValueFrom(
         this.http.get<Product[]>('https://fakestoreapi.com/products')
@@ -146,9 +189,14 @@ export default class SSRApiPage implements OnInit {
           randomNum,
         };
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching product:', error);
-      throw error;
+      // Don't throw - handle gracefully
+      this.error = error?.status === 403 
+        ? 'API request was blocked. Please try again in a moment.'
+        : 'Failed to fetch product. Please try again later.';
+    } finally {
+      this.isLoading = false;
     }
   }
 

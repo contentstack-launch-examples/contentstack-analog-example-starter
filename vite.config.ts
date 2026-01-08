@@ -51,7 +51,8 @@ export default defineConfig(({ mode }) => ({
           },
           // Demo/example pages
           '/ssr',
-          '/ssr-api',
+          // '/ssr-api' - excluded from prerendering because it fetches dynamic data
+          // and the API is blocked by Cloudflare during build-time prerendering
           '/csr',
           '/csr-demo',
           '/isr',
