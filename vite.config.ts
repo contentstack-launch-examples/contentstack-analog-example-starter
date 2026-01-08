@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => ({
       },
       prerender: {
         routes: async () => [
-          // Homepage - highest priority
+          // Homepage - prerendered and included in sitemap
           {
             route: '/',
             sitemap: {
@@ -33,7 +33,7 @@ export default defineConfig(({ mode }) => ({
               priority: '1.0',
             },
           },
-          // About page
+          // About page - prerendered and included in sitemap
           {
             route: '/about-us',
             sitemap: {
@@ -41,19 +41,7 @@ export default defineConfig(({ mode }) => ({
               priority: '0.8',
             },
           },
-          // Demo/example pages
-          '/ssr',
-          // and the API is blocked by Cloudflare during build-time prerendering
-          '/csr',
-          '/csr-demo',
-          '/isr',
-          '/ssg',
-          '/cache-purge',
-          '/cache-revalidate',
-          // Content routes
-          '/blog',
-          '/blog/posts/2022-12-27-my-first-post',
-          '/blog/posts/trying-out-content-routes',
+          // All other routes are NOT prerendered - they will be rendered on-demand
         ],
         sitemap: {
           host: 'https://analogjs-tryout.devcontentstackapps.com',
