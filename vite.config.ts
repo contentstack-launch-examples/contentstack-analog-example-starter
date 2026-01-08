@@ -41,17 +41,8 @@ export default defineConfig(({ mode }) => ({
               priority: '0.8',
             },
           },
-          // Markdown content route
-          {
-            route: '/about',
-            sitemap: {
-              changefreq: 'monthly',
-              priority: '0.8',
-            },
-          },
           // Demo/example pages
           '/ssr',
-          // '/ssr-api' - excluded from prerendering because it fetches dynamic data
           // and the API is blocked by Cloudflare during build-time prerendering
           '/csr',
           '/csr-demo',
@@ -59,6 +50,10 @@ export default defineConfig(({ mode }) => ({
           '/ssg',
           '/cache-purge',
           '/cache-revalidate',
+          // Content routes
+          '/blog',
+          '/blog/posts/2022-12-27-my-first-post',
+          '/blog/posts/trying-out-content-routes',
         ],
         sitemap: {
           host: 'https://analogjs-tryout.devcontentstackapps.com',
@@ -97,14 +92,11 @@ export default defineConfig(({ mode }) => ({
       },
       nitro: {
         routeRules: {
-          // Sitemap - serve as static XML file with proper headers
+          // Sitemap - serve as static XML file
           '/sitemap.xml': {
             ssr: false,
-            cors: true,
             headers: {
-              'Content-Type': 'application/xml; charset=utf-8',
-              'Access-Control-Allow-Origin': '*',
-              'Cache-Control': 'public, max-age=3600',
+              'Content-Type': 'application/xml',
             },
           },
           // SSR route should be server-rendered on each request (not prerendered)
