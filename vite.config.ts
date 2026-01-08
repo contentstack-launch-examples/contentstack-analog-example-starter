@@ -16,6 +16,13 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     analog({
       ssr: true,
+      // Enable content/highlighter
+      content: {
+        highlighter: 'prism',
+        prismOptions: {
+          additionalLangs: ['prism-diff'],
+        },
+      },
       prerender: {
         routes: async () => [
           // Homepage - highest priority
@@ -29,6 +36,14 @@ export default defineConfig(({ mode }) => ({
           // About page
           {
             route: '/about-us',
+            sitemap: {
+              changefreq: 'monthly',
+              priority: '0.8',
+            },
+          },
+          // Markdown content route
+          {
+            route: '/about',
             sitemap: {
               changefreq: 'monthly',
               priority: '0.8',
@@ -81,11 +96,14 @@ export default defineConfig(({ mode }) => ({
       },
       nitro: {
         routeRules: {
-          // Sitemap - serve as static XML file
+          // Sitemap - serve as static XML file with proper headers
           '/sitemap.xml': {
             ssr: false,
+            cors: true,
             headers: {
-              'Content-Type': 'application/xml',
+              'Content-Type': 'application/xml; charset=utf-8',
+              'Access-Control-Allow-Origin': '*',
+              'Cache-Control': 'public, max-age=3600',
             },
           },
           // SSR route should be server-rendered on each request (not prerendered)

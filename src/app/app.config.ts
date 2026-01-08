@@ -9,7 +9,10 @@ import {
   provideZoneChangeDetection
 } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideContent, withMarkdownRenderer } from '@analogjs/content';
+import { withPrismHighlighter } from '@analogjs/content/prism-highlighter';
 import { provideFileRouter, requestContextInterceptor } from '@analogjs/router';
+import 'prismjs/plugins/diff-highlight/prism-diff-highlight';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,5 +24,6 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([requestContextInterceptor])
     ),
     provideClientHydration(withEventReplay()),
+    provideContent(withMarkdownRenderer(), withPrismHighlighter()),
   ],
 };
