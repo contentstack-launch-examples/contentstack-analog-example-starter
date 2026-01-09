@@ -15,7 +15,8 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     analog({
-      ssr: true,
+      ssr: true,        // Enable Server-Side Rendering (renders on-demand)
+      static: true,     // Enable Static Site Generation (may be implicit with prerender)
       // Enable content/highlighter
       content: {
         highlighter: 'prism',
