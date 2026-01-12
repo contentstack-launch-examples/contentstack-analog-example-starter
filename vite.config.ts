@@ -105,6 +105,15 @@ export default defineConfig(({ mode }) => ({
               'Expires': '0',
             },
           },
+          // Geolocation route - SSR enabled with no cache (user-specific data)
+          '/geo': {
+            ssr: true,
+            headers: {
+              'Cache-Control': 'no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0',
+            },
+          },
           // CSR route - client-side rendering only (no SSR)
           '/csr': {
             ssr: false,
