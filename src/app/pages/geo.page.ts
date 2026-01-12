@@ -27,7 +27,7 @@ type GeolocationData = {
       <h1>🌍 Geolocation Headers Demo</h1>
       <p class="description">
         This page demonstrates <strong>Contentstack Launch geolocation headers</strong> 
-        accessed via an Edge Function. The location is determined from your IP address.
+        accessed via a Cloud Function. The location is determined from your IP address.
       </p>
 
       <div *ngIf="isLoading" class="loading-message">
@@ -293,7 +293,7 @@ export default class GeoPage implements OnInit {
     } catch (error: any) {
       console.error('Error fetching geolocation:', error);
       this.error = error?.status === 404 
-        ? 'Geolocation endpoint not found. Make sure the edge function is deployed.'
+        ? 'Geolocation endpoint not found. Make sure the cloud function is deployed.'
         : 'Failed to fetch geolocation data. Please try again later.';
     } finally {
       this.isLoading = false;
