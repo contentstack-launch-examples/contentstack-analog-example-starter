@@ -114,6 +114,15 @@ export default defineConfig(({ mode }) => ({
               'Expires': '0',
             },
           },
+          // Deploy Hook route - SSR enabled with no cache
+          '/deploy-hook': {
+            ssr: true,
+            headers: {
+              'Cache-Control': 'no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0',
+            },
+          },
           // CSR route - client-side rendering only (no SSR)
           '/csr': {
             ssr: false,
